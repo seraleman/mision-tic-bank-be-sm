@@ -7,16 +7,16 @@ from rest_framework.permissions import IsAuthenticated
 from authApp.models.user import User
 from authApp.serializers.userSerializer import UserSerializer
 
-
 class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
-
+    
     def get(self, request, *args, **kwargs):
+    
         token = request.META.get('HTTP_AUTHORIZATION')[7:]
         tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
-        valid_data = tokenBackend.decode(token, verify=False)
+        valid_data = tokenBackend.decode(token,verify=False)
 
         if valid_data['user_id'] != kwargs['pk']:
             stringResponse = {'detail':'Unauthorized Request'}
